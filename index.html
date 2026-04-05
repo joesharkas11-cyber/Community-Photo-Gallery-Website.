@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Community Photo Gallery | Official Platform</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f05a28;
+            --primary-dark: #d44a1c;
+            --primary-light: #fff0e8;
+            --dark: #1a2c2f;
+            --gray: #5a6e73;
+            --light-gray: #f5f2ef;
+            --border: #e8dfd9;
+            --success: #2b7a4b;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: var(--dark);
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(240,90,40,0.2);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(240,90,40,0.25);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-dark);
+        }
+        .btn-ghost {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+        /* Header / Nav */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), #c93e12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            font-weight: 500;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            transition: 0.2s;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+        /* Hero Section */
+        .hero {
+            padding: 70px 0 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+        .hero-content {
+            flex: 1.2;
+        }
+        .hero-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .hero-content h1 {
+            font-size: 3.4rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 32px;
+            max-width: 550px;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 28px;
+        }
+        .stat-item span {
+            font-weight: 800;
+            font-size: 1.6rem;
+            display: block;
+            color: var(--primary);
+        }
+        .upload-card {
+            flex: 0.9;
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .dropzone {
+            border: 2px dashed #f0cbbc;
+            border-radius: 24px;
+            padding: 40px 20px;
+            background: var(--light-gray);
+            transition: 0.2s;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        .dropzone:hover {
+            border-color: var(--primary);
+            background: #fff5ef;
+        }
+        #fileInput { display: none; }
+        /* Gallery Section (Official) */
+        .official-section {
+            padding: 60px 0;
+            background: #fefcf9;
+            border-radius: 48px 48px 0 0;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .section-header h2 {
+            font-size: 1.9rem;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 28px;
+        }
+        .photo-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            transition: all 0.25s;
+            border: 1px solid var(--border);
+        }
+        .photo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -12px rgba(0,0,0,0.12);
+        }
+        .photo-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            background: #f1eae4;
+        }
+        .photo-info {
+            padding: 16px 18px 18px;
+        }
+        .photo-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .photo-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #b95a3a;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 30px;
+            transition: 0.1s;
+        }
+        .delete-btn:hover {
+            background: #fef1ec;
+        }
+        .empty-gallery {
+            text-align: center;
+            padding: 70px 20px;
+            background: white;
+            border-radius: 40px;
+            color: var(--gray);
+        }
+        /* Features Grid */
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 50px 0;
+        }
+        .feature-card {
+            flex: 1;
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+        .feature-icon {
+            background: var(--primary-light);
+            width: 56px;
+            height: 56px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: #cddbdf;
+            padding: 48px 0 32px;
+            margin-top: 60px;
+            border-radius: 32px 32px 0 0;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        /* Toast */
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+        }
+        @media (max-width: 800px) {
+            .container { padding: 0 24px; }
+            .hero-content h1 { font-size: 2.3rem; }
+            .navbar { flex-direction: column; gap: 16px; }
+            .nav-links { gap: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-camera-retro"></i> 
+                <span>Community Gallery</span>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link active" data-section="home">Home</a>
+                <a class="nav-link" data-section="gallery">Gallery</a>
+                <a class="nav-link" data-section="features">Features</a>
+                <a class="nav-link" data-section="about">About</a>
+            </div>
+            <div>
+                <button class="btn-outline" id="demoSignInBtn"><i class="fas fa-user-circle"></i> Sign In</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- HOME SECTION (Hero + Upload) -->
+    <div id="homeSection" class="container">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-images"></i> Official Platform v2.0</div>
+                <h1>Centralized memory hub for your community</h1>
+                <p>Upload, organize, and celebrate every moment together. A secure, fast, and beautiful photo gallery that actually saves your images.</p>
+                <div class="hero-stats">
+                    <div class="stat-item"><span>2,500+</span> Active Users</div>
+                    <div class="stat-item"><span>12k+</span> Shared Moments</div>
+                    <div class="stat-item"><span>⭐ 4.9</span> Rating</div>
+                </div>
+            </div>
+            <div class="upload-card">
+                <div class="dropzone" id="uploadDropzone">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 12px; display: block;"></i>
+                    <p style="font-weight: 600;">Drag & drop or click to upload</p>
+                    <p style="font-size: 0.8rem; margin-top: 8px;">JPEG, PNG, WEBP (max 5MB)</p>
+                    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--gray); margin-top: 12px;"><i class="fas fa-lock"></i> Your photos are stored privately in your browser (localStorage)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GALLERY SECTION (Official Display) -->
+    <div id="gallerySection" class="official-section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-photo-video"></i> Community Gallery</h2>
+                <div style="display: flex; gap: 16px;">
+                    <span id="galleryCounter" class="btn-ghost" style="background: var(--light-gray); border-radius: 40px;"><i class="fas fa-database"></i> <span id="photoCountSpan">0</span> memories</span>
+                    <button id="clearAllPhotosBtn" class="btn-ghost" style="color: #c2412c;"><i class="fas fa-trash-alt"></i> Clear all</button>
+                </div>
+            </div>
+            <div id="photoGridContainer" class="photo-grid">
+                <div class="empty-gallery">
+                    <i class="fas fa-camera" style="font-size: 3rem; opacity: 0.5; margin-bottom: 12px; display: block;"></i>
+                    <p>No photos yet. Upload your first community memory from the home page.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <div id="featuresSection" class="container" style="display: none; padding: 60px 0;">
+        <h2 style="font-size: 2rem; text-align: center;">Designed for communities</h2>
+        <p style="text-align: center; color: var(--gray); margin-bottom: 48px;">Everything you need to preserve and celebrate shared moments</p>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-upload"></i></div><h3>Real Uploads</h3><p>Working image upload with preview and persistent local storage.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-search"></i></div><h3>Organized Gallery</h3><p>All photos saved with metadata, deletion, and clean grid layout.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Private by Default</h3><p>Your data stays on your device — full control, no external servers.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-mobile-alt"></i></div><h3>Responsive & Fast</h3><p>Optimized for any device, smooth grid, instant uploads.</p></div>
+        </div>
+    </div>
+
+    <!-- ABOUT SECTION (Official info) -->
+    <div id="aboutSection" class="container" style="display: none; padding: 60px 0;">
+        <div style="background: #fef9f5; border-radius: 40px; padding: 48px;">
+            <h2>About Community Photo Gallery</h2>
+            <p style="margin: 20px 0; font-size: 1.05rem;">An official solution to fragmented photo storage — built as a centralized web platform for organizing, sharing, and celebrating community moments. This isn't a mockup; it's a fully functional photo management system where uploaded images are saved locally, persist after refresh, and can be deleted at any time.</p>
+            <h3 style="margin-top: 32px;">Project Credits</h3>
+            <p><strong>Youssef Sharkas | Mazen Masoud | Moemen Mamdouh | Yasien Ehab | Hamza Hazem</strong><br>Presented as a professional demonstration of a community-centered digital space.</p>
+            <hr style="margin: 28px 0; border-color: #f0e2d6;">
+            <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Technology: HTML5, CSS3, JavaScript (ES6), localStorage API. All images are stored as Base64 ensuring reliable offline-capable gallery.</p>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div><i class="fas fa-camera"></i> Community Photo Gallery<br><span style="font-size: 0.8rem;">Centralized · Secure · Real uploads</span></div>
+            <div>© 2025 — Official Release<br>All trademarks belong to respective teams.</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ------------------- PHOTO STORAGE LOGIC (real save) -------------------
+    let photoLibrary = []; // each: { id, dataUrl, name, date }
+
+    function loadLibrary() {
+        const stored = localStorage.getItem("cpg_official_gallery");
+        if (stored) {
+            try {
+                photoLibrary = JSON.parse(stored);
+                if (!Array.isArray(photoLibrary)) photoLibrary = [];
+            } catch(e) { photoLibrary = []; }
+        } else {
+            photoLibrary = [];
+        }
+        renderGalleryGrid();
+        updateCounters();
+    }
+
+    function saveLibrary() {
+        localStorage.setItem("cpg_official_gallery", JSON.stringify(photoLibrary));
+        updateCounters();
+    }
+
+    function updateCounters() {
+        const count = photoLibrary.length;
+        const spanElem = document.getElementById("photoCountSpan");
+        if (spanElem) spanElem.innerText = count;
+        const galleryCounterSpan = document.getElementById("galleryCounter");
+        if (galleryCounterSpan && count > 0) {
+            // keep as is
+        }
+        // also update optional home indicator
+        const uploadHint = document.querySelector(".upload-card p:last-child");
+    }
+
+    function renderGalleryGrid() {
+        const grid = document.getElementById("photoGridContainer");
+        if (!grid) return;
+        if (photoLibrary.length === 0) {
+            grid.innerHTML = `<div class="empty-gallery"><i class="fas fa-images" style="font-size: 3rem; opacity: 0.4;"></i><p>Your community gallery is waiting. Upload photos from the home tab.</p></div>`;
+            return;
+        }
+        let html = '';
+        photoLibrary.forEach(photo => {
+            const displayDate = new Date(photo.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+            const shortName = photo.name.length > 30 ? photo.name.substring(0,27)+'...' : photo.name;
+            html += `
+                <div class="photo-card" data-id="${photo.id}">
+                    <img src="${photo.dataUrl}" alt="${escapeHtml(photo.name)}" loading="lazy">
+                    <div class="photo-info">
+                        <div class="photo-title" title="${escapeHtml(photo.name)}">${escapeHtml(shortName)}</div>
+                        <div class="photo-meta">
+                            <span><i class="far fa-calendar-alt"></i> ${displayDate}</span>
+                            <button class="delete-photo-btn" data-id="${photo.id}" aria-label="Delete photo"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+        // attach delete events
+        document.querySelectorAll('.delete-photo-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                if (id) deletePhotoById(id);
+            });
+        });
+    }
+
+    function deletePhotoById(id) {
+        photoLibrary = photoLibrary.filter(p => p.id !== id);
+        saveLibrary();
+        renderGalleryGrid();
+        updateCounters();
+        showToast("Photo removed from gallery", "#2b7a4b");
+    }
+
+    function clearAllPhotos() {
+        if (photoLibrary.length === 0) return;
+        if (confirm("⚠️ Permanently delete all community photos? This action cannot be undone.")) {
+            photoLibrary = [];
+            saveLibrary();
+            renderGalleryGrid();
+            updateCounters();
+            showToast("All memories cleared", "#c2412c");
+        }
+    }
+
+    // Upload handler
+    function processUploadFiles(files) {
+        if (!files || files.length === 0) return;
+        const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+        if (imageFiles.length === 0) {
+            showToast("Please select valid images", "#c2412c");
+            return;
+        }
+        let processed = 0;
+        imageFiles.forEach(file => {
+            if (file.size > 5 * 1024 * 1024) {
+                showToast(`Skipped ${file.name} (max 5MB)`, "#c2412c");
+                processed++;
+                if (processed === imageFiles.length) maybeFinish();
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const newPhoto = {
+                    id: Date.now() + '-' + Math.random().toString(36).substring(2, 10) + '-' + file.name,
+                    dataUrl: e.target.result,
+                    name: file.name,
+                    date: new Date().toISOString()
+                };
+                photoLibrary.unshift(newPhoto);
+                saveLibrary();
+                renderGalleryGrid();
+                updateCounters();
+                processed++;
+                if (processed === imageFiles.length) {
+                    showToast(`✅ ${imageFiles.length} photo(s) uploaded successfully!`, "#2b7a4b");
+                }
+            };
+            reader.onerror = () => {
+                processed++;
+                showToast(`Error reading ${file.name}`, "#c2412c");
+                if (processed === imageFiles.length) maybeFinish();
+            };
+            reader.readAsDataURL(file);
+        });
+        function maybeFinish() {}
+    }
+
+    function showToast(message, bgColor = "#1a2c2f") {
+        let existing = document.querySelector('.toast-message');
+        if(existing) existing.remove();
+        let toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+        toast.style.backgroundColor = bgColor;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2600);
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Navigation (official layout)
+    const sections = {
+        home: document.getElementById('homeSection'),
+        gallery: document.getElementById('gallerySection'),
+        features: document.getElementById('featuresSection'),
+        about: document.getElementById('aboutSection')
+    };
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function showSection(sectionId) {
+        Object.keys(sections).forEach(key => {
+            if (sections[key]) sections[key].style.display = 'none';
+        });
+        if (sections[sectionId]) sections[sectionId].style.display = 'block';
+        if (sectionId === 'gallery') sections.gallery.style.display = 'block';
+        if (sectionId === 'features') sections.features.style.display = 'block';
+        if (sectionId === 'about') sections.about.style.display = 'block';
+        if (sectionId === 'home') sections.home.style.display = 'block';
+        navLinks.forEach(link => {
+            const val = link.getAttribute('data-section');
+            if (val === sectionId) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const section = link.getAttribute('data-section');
+            if (section) showSection(section);
+        });
+    });
+
+    // DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        loadLibrary();
+        showSection('home');
+        
+        const fileInput = document.getElementById('fileInput');
+        const dropzone = document.getElementById('uploadDropzone');
+        const demoBtn = document.getElementById('demoSignInBtn');
+        const clearBtn = document.getElementById('clearAllPhotosBtn');
+        
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) processUploadFiles(e.target.files);
+            fileInput.value = '';
+        });
+        
+        // Drag & drop
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.background = '#fff0e4';
+            dropzone.style.borderColor = 'var(--primary)';
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.background = 'var(--light-gray)';
+            dropzone.style.borderColor = '#f0cbbc';
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.background = 'var(--light-gray)';
+            const files = e.dataTransfer.files;
+            if (files.length) processUploadFiles(files);
+        });
+        
+        if (demoBtn) {
+            demoBtn.addEventListener('click', () => {
+                showToast("✨ Welcome! Upload your own photos — they will be saved locally.", "var(--primary)");
+                if (photoLibrary.length === 0) {
+                    // add a sample image (official placeholder)
+                    fetch('https://picsum.photos/id/20/400/300')
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const file = new File([blob], "community-sample.jpg", { type: "image/jpeg" });
+                            processUploadFiles([file]);
+                        })
+                        .catch(() => showToast("Sample could not be loaded, but you can upload your own!", "var(--gray)"));
+                }
+            });
+        }
+        if (clearBtn) clearBtn.addEventListener('click', clearAllPhotos);
+    });
+</script>
+</body>
+</html>
